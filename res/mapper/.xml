@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.Reservation">
+
+  <!-- 영화 목록 조회 -->
+  <select id="selectMovies" resultType="Movie">
+    SELECT * FROM movie
+    ORDER BY title
+  </select>
+
+  <!-- 극장 목록 조회 -->
+  <select id="selectTheaters" resultType="Theater">
+    SELECT * FROM theater
+    ORDER BY name
+  </select>
+
+  <!-- 상영시간표(특정 영화, 극장, 날짜) 조회 -->
+  <select id="selectShowtimes" resultType="Showtime">
+    SELECT * FROM showtime
+    WHERE movie_id = #{movieId}
+      AND auditorium_id IN (
+        SELECT auditorium_id FROM auditorium WHERE theater_id = #{theaterId}
+      )
+      AND show_date = #{showDate}
+    ORDER BY show_time
+  </select>
+
+  <!-- 좌석 목록 및 예매 여부 조회 -->
+  <select id="selectSeats" resultType="Seat">
+    SELECT s.*, 
+      (SELECT COUNT(*) FROM reservation_seat rs WHERE rs.seat_id = s.seat_id AND rs.reservation_id IN 
+        (SELECT r.reservation_id FROM reservation r WHERE r.showtime_id = #{showtimeId}))
+      AS is_reserved
+    FROM seat s
+    WHERE s.auditorium_id = #{auditoriumId}
+    ORDER BY s.row_label, s.seat_number
+  </select>
+
+  <!-- 예매(예약) 정보 등록 -->
+  <insert id="insertReservation" parameterType="Reservation">
+    INSERT INTO reservation (
+      reservation_id, showtime_id, reservation_date, total_price, customer_name, customer_phone, customer_email, is_member
+    ) VALUES (
+      #{reservationId}, #{showtimeId}, SYSDATE, #{totalPrice}, #{customerName}, #{customerPhone}, #{customerEmail}, #{isMember}
+    )
+  </insert>
+
+  <!-- 예매 좌석 등록 (여러 좌석일 경우 foreach 사용) -->
+  <insert id="insertReservationSeat" parameterType="ReservationSeat">
+    INSERT INTO reservation_seat (
+      reservation_seat_id, reservation_id, seat_id, ticket_type, price
+    ) VALUES (
+      #{reservationSeatId}, #{reservationId}, #{seatId}, #{ticketType}, #{price}
+    )
+  </insert>
+
+  <!-- 결제 정보 등록 -->
+  <insert id="insertPayment" parameterType="Payment">
+    INSERT INTO payment (
+      payment_id, reservation_id, payment_method, payment_date, amount, payment_status
+    ) VALUES (
+      #{paymentId}, #{reservationId}, #{paymentMethod}, SYSDATE, #{amount}, #{paymentStatus}
+    )
+  </insert>
+
+  <!-- 예매 상세 조회 (예매정보 + 결제정보 + 좌석정보) -->
+  <select id="selectReservationDetail" resultMap="ReservationDetailMap">
+    SELECT r.*, p.*, s.*, st.*, m.*, t.*
+    FROM reservation r
+      JOIN payment p ON r.reservation_id = p.reservation_id
+      JOIN reservation_seat s ON r.reservation_id = s.reservation_id
+      JOIN showtime st ON r.showtime_id = st.showtime_id
+      JOIN movie m ON st.movie_id = m.movie_id
+      JOIN theater t ON st.auditorium_id = t.theater_id
+    WHERE r.reservation_id = #{reservationId}
+  </select>
+
+  <!-- resultMap 예시 (복합 객체 매핑) -->
+  <resultMap id="ReservationDetailMap" type="ReservationDetail">
+    <id property="reservationId" column="reservation_id"/>
+    <result property="totalPrice" column="total_price"/>
+    <!-- ...필요한 필드 추가 -->
+    <!-- 하위 객체 매핑도 가능 -->
+  </resultMap>
+
+</mapper>

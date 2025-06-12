@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+	<resultMap id="memberMap" type="memberVo">
+		<result property="memId" column="MEM_ID" />
+		<result property="memPass" column="MEM_PASS" />
+		<result property="memName" column="MEM_NAME" />
+		<result property="memTel" column="MEM_TEL" />
+		<result property="memAddr" column="MEM_ADDR" />
+		<result property="memPhoto" column="MEM_PHOTO" />
+	</resultMap>
+
+	<select id="getListAll" resultMap="memberMap">
+		select * from mymember
+	</select>
+
+	<!-- 회원정보 저장 하기 -->
+	<insert id="insertMember" parameterType="memberVo">
+		insert into
+		members (
+		MEMBER_ID,
+		MEMBER_PASSWORD,
+		MEMBER_NAME,
+		MEMBER_BIRTH_DATE,
+		MEMBER_PHONE,
+		MEMBER_NICKNAME)
+		values(
+		#{memberId},
+		#{memberPassword},
+		#{memberName},
+		#{memberBirthDate},
+		#{memberPhone},
+		#{memberNickname})
+	</insert>
+
+
+
+	<!-- 회원 정보 수정 -->
+	<update id="updateMember" parameterType="memberVo">
+		UPDATE members
+		SET
+		<!-- member_name = #{memberName}, -->
+		member_phone = #{memberPhone},
+		member_email = #{memberEmail},
+		<!-- member_zipcode = #{memberZipcode}, -->
+		member_road_addr = #{memberRoadAddr},
+		member_detail_addr = #{memberDetailAddr}
+		WHERE member_id = #{memberId}
+	</update>
+
+	<!-- 관리자 페이지 리스트 조회 -->
+
+
+
+</mapper>
+   
