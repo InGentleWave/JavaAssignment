@@ -28,7 +28,6 @@ public class InsertMemberController extends HttpServlet {
 		if (isAjax) {
 			System.out.println("InsertMemberController 비동기방식 doGet() 호출됨");
 			String memId = req.getParameter("memId");
-			System.out.println('1');
 			boolean isIdAvailable = service.isIdAvailable(memId);
 			resp.setContentType("application/json; charset=UTF-8");
 			
