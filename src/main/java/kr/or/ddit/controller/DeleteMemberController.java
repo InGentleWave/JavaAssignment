@@ -21,7 +21,10 @@ import util.GsonUtil;
 public class DeleteMemberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IMemberService service = null;
-
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
+	}
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		resp.setCharacterEncoding("utf-8");
