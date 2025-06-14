@@ -67,13 +67,17 @@ table, th, td{
 				<td colspan="2" style="text-align:center;color:red;">프로필 사진 미구현</td>
 			</tr>
 			<tr>
-				<th>회원ID</th><td><c:out value='${data.memId}'/></td>
+				<th>회원ID</th>
+				<td>
+					<c:out value='${data.memId}'/>
+					<input type="hidden" value="${data.memId}" name="memId"/>
+				</td>
 			</tr>
 			<tr>
-				<th>비밀번호</th><td><input type="text" id="memPass" name="memPass" class="text" required></td>
+				<th>변경할 비밀번호</th><td><input type="text" id="memPass" name="memPass" class="text"></td>
 			</tr>
 			<tr>
-				<th>비밀번호 확인</th><td><input type="text" id="passwordCheck"  class="text"  required></td>
+				<th>비밀번호 확인</th><td><input type="text" id="passwordCheck"  class="text"></td>
 			</tr>
 			<tr id="tr-pw-hidden" class="tr-hidden">
 				<td id="pwCheckMsg" class="hiddenMsg" colspan='2'>
@@ -133,6 +137,7 @@ table, th, td{
 					e.preventDefault();
 					document.querySelector("#table-detail").style.display="none";
 					document.querySelector("#form-update").style.display="block";
+					
 				} else if(e.target.id ==="deleteBtn"){
 					if(confirm("회원 정보를 삭제할까요?")){
 						window.location.href=contextPath+"/delete.do?memId="+memId;
@@ -159,7 +164,7 @@ table, th, td{
 			let isPwCheckOk = false;
 			const submitBtn = document.querySelector("#submitBtn");
 			// 유효성 검사 전 제출 버튼 비활성화
-			submitBtn.disabled = true;
+			submitBtn.disabled = false;
 			// 유효성 검사 후 제출 버튼 활성화 함수
 			function isInputOk(){
 				if( isPwCheckOk ){
@@ -168,12 +173,12 @@ table, th, td{
 					submitBtn.disabled = true;
 				}
 			}
-			// 취소(리셋) 버튼 클릭 시 tr-hidden 숨기기, 저장 버튼 비활성화
-			document.querySelector("button[type='reset']").addEventListener("click",function(){
-				document.querySelector("#tr-pw-hidden").style.display="none";
-				document.querySelector("#tr-file-hidden").style.display="none";
-				submitBtn.disabled = true;
-			});
+// 			// 취소(리셋) 버튼 클릭 시 tr-hidden 숨기기, 저장 버튼 비활성화
+// 			document.querySelector("button[type='reset']").addEventListener("click",function(){
+// 				document.querySelector("#tr-pw-hidden").style.display="none";
+// 				document.querySelector("#tr-file-hidden").style.display="none";
+// 				submitBtn.disabled = true;
+// 			});
 			// 비밀번호 확인 여부 출력용 함수
 			function pwCheckMsg(){
 				const pwCheckMsg = document.querySelector("#pwCheckMsg");
@@ -187,6 +192,11 @@ table, th, td{
 					document.querySelector("#tr-pw-hidden").style.display="none";
 					isInputOk();
 					return;
+				}
+				if(pw === ""){
+					
+				} else {
+					
 				}
 				// 메세지 출력
 				let msg="";

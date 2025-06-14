@@ -41,6 +41,7 @@ public class MemberDaoImpl implements IMemberDao {
 		try {
 			session = MyBatisUtil.getSqlSession();
 			cnt = session.insert("member.insertMember", mv);
+			if(cnt>0) session.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -66,14 +67,34 @@ public class MemberDaoImpl implements IMemberDao {
 
 	@Override
 	public int updateMember(MemberVO mv) {
-		// TODO Auto-generated method stub
-		return 0;
+		SqlSession session = null;
+		int cnt = 0;
+		try {
+			session = MyBatisUtil.getSqlSession();
+			cnt = session.update("member.updateMember", mv);
+			if(cnt>0) session.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return cnt;
 	}
 
 	@Override
 	public int deleteMember(String memId) {
-		// TODO Auto-generated method stub
-		return 0;
+		SqlSession session = null;
+		int cnt = 0;
+		try {
+			session = MyBatisUtil.getSqlSession();
+			cnt = session.update("member.deleteMember", memId);
+			if(cnt>0) session.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return cnt;
 	}
 
 	@Override

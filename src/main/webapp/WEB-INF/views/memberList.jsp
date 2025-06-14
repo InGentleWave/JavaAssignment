@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +17,12 @@ table, th, td{
 </style>
 </head>
 <body>
+	<c:if test="${not empty sessionScope.msg }">
+		<script>
+			alert("${sessionScope.msg}");
+		</script>
+		<c:remove var="msg" scope="session"/>
+	</c:if>
 	<table>
 		<thead>
 			<tr>

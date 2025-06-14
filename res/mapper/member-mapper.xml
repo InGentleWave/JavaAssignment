@@ -51,14 +51,14 @@
 	<!-- 회원 정보 수정 -->
 	<update id="updateMember" parameterType="memberVo">
 		UPDATE members
-		SET
-		<!-- member_name = #{memberName}, -->
-		member_phone = #{memberPhone},
-		member_email = #{memberEmail},
-		<!-- member_zipcode = #{memberZipcode}, -->
-		member_road_addr = #{memberRoadAddr},
-		member_detail_addr = #{memberDetailAddr}
-		WHERE member_id = #{memberId}
+		<set>
+			<if test="memPass!=null and memPass != '' ">MEM_PASS  = #{memPass},</if>
+			<if test="memName!=null and memName != '' ">MEM_NAME  = #{memName},</if>
+			<if test="memTel!=null and memTel != '' ">MEM_TEL   = #{memTel},</if>
+			<if test="memAddr!=null and memAddr != '' ">MEM_ADDR  = #{memAddr},</if>
+			<if test="memPhoto!=null and memPhoto != '' ">MEM_PHOTO = #{memPhoto},</if>
+		</set>
+		WHERE MEM_ID = #{memId}
 	</update>
 
 	<!-- 관리자 페이지 리스트 조회 -->
