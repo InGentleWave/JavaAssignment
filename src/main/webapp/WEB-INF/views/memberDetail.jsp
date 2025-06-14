@@ -11,22 +11,63 @@ table, th, td{
 	border: 1px solid blue;
 	border-collapse: collapse;
 }
-.detail{
-
-}
-.update{
+#form-update{
 	display:none;
+}
+#tr-file-hidden, #tr-pw-hidden {
+	display:none;
+}
+.btn{
+	margin-right: 10px;
+	cursor: pointer;
+}
+.btn:disabled {
+	cursor: default;
+}
+.hiddenMsg{
+	color:red;
+	text-align: center;
+	font-size : 10pt;
 }
 </style>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath }/update.do" method="post">
+	<table id="table-detail">
+		<tr>
+			<td colspan="2" style="text-align:center;color:red;">프로필 사진 미구현</td>
+		</tr>
+		<tr>
+			<th>회원ID</th><td><c:out value='${data.memId}'/></td>
+		</tr>
+		<tr>
+			<th>비밀번호</th><td><c:out value='${data.memPass}'/></td>
+		</tr>
+		<tr>
+			<th>회원이름</th><td><c:out value='${data.memName}'/></td>
+		</tr>
+		<tr>
+			<th>전화번호</th><td><c:out value='${data.memTel}'/></td>
+		</tr>
+		<tr>
+			<th>회원주소</th><td><c:out value='${data.memAddr}'/></td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<div style="display:flex; justify-content:center;">
+					<button type="button" class="btn" id="updateBtn">수정</button>
+					<button type="button" class="btn" id="deleteBtn">삭제</button>
+					<button type="button" class="btn memberListBtn">회원목록</button>
+				</div>
+			</td>
+		</tr>
+	</table>
+	<form action="${pageContext.request.contextPath }/update.do" method="post" id="form-update">
 		<table>
-			<tr class="detail">
-				<th>회원ID</th><td><c:out value='${data.memId}'/></td>
+			<tr>
+				<td colspan="2" style="text-align:center;color:red;">프로필 사진 미구현</td>
 			</tr>
-			<tr class="update">
-				<th>회원ID</th><td><input type="text" id="memId" name="memId" value="<c:out value='${data.memId}'/>" required>
+			<tr>
+				<th>회원ID</th><td><c:out value='${data.memId}'/></td>
 			</tr>
 			<tr>
 				<th>비밀번호</th><td><input type="text" id="memPass" name="memPass" class="text" required></td>
@@ -60,8 +101,8 @@ table, th, td{
 				<td colspan='2'>
 					<div style="display:flex; justify-content:center;">
 						<button type="submit" class="btn" id="submitBtn">저장</button>
-						<button type="reset" class="btn">취소</button>
-						<button type="button" id="memberListBtn" class="btn">회원목록</button>
+						<button type="button" class="btn" id="cancleBtn">취소</button>
+						<button type="button" class="btn memberListBtn">회원목록</button>
 					</div>
 				</td>
 			</tr>
@@ -73,6 +114,7 @@ table, th, td{
 	<script src="${pageContext.request.contextPath}/js/jquery-3.7.1.js"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded",function(){
+			console.log("문서 로드 완료");
 			// 첨부파일 미구현
 			document.querySelector("input[type='file']").addEventListener("click", function(e){
 				e.preventDefault();
@@ -83,18 +125,44 @@ table, th, td{
 				setTimeout(function(){
 					trHiddenStyle.display="none";
 				},1100);
-			})
+			});
+			// 이벤트 위임
+			document.addEventListener("click",function(e){
+				const memId = "${data.memId}";
+				if(e.target.id ==="updateBtn"){
+					e.preventDefault();
+					document.querySelector("#table-detail").style.display="none";
+					document.querySelector("#form-update").style.display="block";
+				} else if(e.target.id ==="deleteBtn"){
+					if(confirm("회원 정보를 삭제할까요?")){
+						window.location.href=contextPath+"/delete.do?memId="+memId;
+					} 
+				} else if(e.target.classList.contains("memberListBtn")){
+					e.preventDefault();
+					window.location.href=contextPath+"/list.do";
+				} else if(e.target.id === "cancleBtn"){
+					e.preventDefault();
+					document.querySelector("#table-detail").style.display="table-row";
+					document.querySelector("#form-update").style.display="none";
+				}
+			});
+			document.addEventListener("input",function(e){
+				// 비밀번호 및 비밀번호 확인 작성시 실시간 유효성 검사
+				if(e.target.id ==="memPass"||e.target.id ==="passwordCheck"){
+					e.preventDefault();
+					pwCheckMsg();
+				}
+			});
 			
 		// 유효성 검사 체크용 변수 및 함수
 			// 유효성 검사 체크용 변수
 			let isPwCheckOk = false;
-			let isIdAvailable = false;
 			const submitBtn = document.querySelector("#submitBtn");
 			// 유효성 검사 전 제출 버튼 비활성화
 			submitBtn.disabled = true;
 			// 유효성 검사 후 제출 버튼 활성화 함수
 			function isInputOk(){
-				if( isPwCheckOk && isIdAvailable ){
+				if( isPwCheckOk ){
 					submitBtn.disabled = false;
 				} else {
 					submitBtn.disabled = true;
@@ -102,11 +170,10 @@ table, th, td{
 			}
 			// 취소(리셋) 버튼 클릭 시 tr-hidden 숨기기, 저장 버튼 비활성화
 			document.querySelector("button[type='reset']").addEventListener("click",function(){
-				document.querySelector("#tr-id-hidden").style.display="none";
 				document.querySelector("#tr-pw-hidden").style.display="none";
 				document.querySelector("#tr-file-hidden").style.display="none";
 				submitBtn.disabled = true;
-			})
+			});
 			// 비밀번호 확인 여부 출력용 함수
 			function pwCheckMsg(){
 				const pwCheckMsg = document.querySelector("#pwCheckMsg");
@@ -138,65 +205,12 @@ table, th, td{
 				// 유효성 검사
 				isInputOk();
 			}
-			// 비밀번호 및 비밀번호 확인 작성시 실시간 유효성 검사
-			document.querySelector("#memPass").addEventListener("input",pwCheckMsg)
-			document.querySelector("#passwordCheck").addEventListener("input",pwCheckMsg)
-			// ID 사용가능 여부 출력용 함수
-			function idAvailableMsg(data){
-				const idAvailableMsg = document.querySelector("#idAvailableMsg");
-				const msgStyle = idAvailableMsg.style;
-				let msg="";
-				if(data === "empty"){
-					msgStyle.color = "red";
-					msg = "아이디를 입력 후 중복확인이 가능합니다.";
-					isIdAvailable = false;
-				} else if(data){
-					msgStyle.color = "green";
-					msg = "사용 가능한 아이디입니다."
-					isIdAvailable = true;
-				} else {
-					msgStyle.color = "red";
-					msg ="사용할 수 없는 아이디입니다.";
-					isIdAvailable = false;
-				}
-				
-				idAvailableMsg.innerText = msg;
-				document.querySelector("#tr-id-hidden").style.display="table-row";
-				// 유효성 검사
-				isInputOk();
-			}
-			// ID 중복확인 버튼에 비동기 요청 이벤트 설정하기
-			document.querySelector("#isIdAvailableBtn").addEventListener("click",function(){
-				const memId = document.querySelector("#memId").value;
-				// 아이디 미입력 시 출력 및 함수 종료
-				if(memId==null||memId===""){
-					idAvailableMsg("empty");
-					document.querySelector("#memId").focus();
-					return;
-				}
-				// 아이디 중복 검사 비동기 요청
-				fetch(contextPath + "/insert.do?memId="+memId,{
-					headers :{
-						'Content-Type':'application/json',
-						'X-Requested-With' : 'XMLHttpRequest'
-					}
-				})
-					.then(res=>res.json())
-					.then(function(data){
-						// 결과 출력
-						idAvailableMsg(data.isIdAvailable);
-					})
-					.catch(error => console.error(error))
-			});
-			// 회원목록 버튼 이벤트 설정(클릭 시 리스트 화면으로 이동)
-			document.querySelector("#memberListBtn").addEventListener("click",function(){
-				window.location.href=contextPath+"/list.do";
-			});
+			
 			// 등록 실패 시 알림과 함께 요소 채우기
 			if("${msg}"&&"${msg}" === "회원 등록에 실패했습니다."){
 				alert("${msg}");
 			}
-		})
+		});
 	</script>
 </body>
 </html>

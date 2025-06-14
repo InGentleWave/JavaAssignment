@@ -27,6 +27,8 @@ public class UpdateMemberController extends HttpServlet {
 		resp.setCharacterEncoding("utf-8");
 		
 		String memId = req.getParameter("memId");
+		
+		service = MemberServiceImpl.getInstance();
 		MemberVO mv = service.getMemberDetail(memId);
 		req.setAttribute("data", mv);
 		

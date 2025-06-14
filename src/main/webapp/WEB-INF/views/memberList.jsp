@@ -80,10 +80,10 @@ table, th, td{
 			if(e.target.tagName === 'A'){
 				e.preventDefault();
 				const memId = e.target.dataset['id'];
+				window.location.href=contextPath+"/update.do?memId="+memId;
 			} else{
 				return;
 			}
-			window.location.href=contextPath+"update.do?memId="+memId;
 			
 		});
 		
