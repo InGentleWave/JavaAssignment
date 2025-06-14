@@ -23,14 +23,12 @@ public class MemberServiceImpl implements IMemberService {
 
 	@Override
 	public int insertMember(MemberVO mv) {
-		// TODO Auto-generated method stub
-		return 0;
+		return dao.insertMember(mv);
 	}
 
 	@Override
 	public MemberVO getMemberDetail(String memId) {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.getMemberDetail(memId);
 	}
 
 	@Override

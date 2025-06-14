@@ -23,21 +23,24 @@
 
 	<!-- 회원정보 저장 하기 -->
 	<insert id="insertMember" parameterType="memberVo">
-		insert into
-		members (
-		MEMBER_ID,
-		MEMBER_PASSWORD,
-		MEMBER_NAME,
-		MEMBER_BIRTH_DATE,
-		MEMBER_PHONE,
-		MEMBER_NICKNAME)
-		values(
-		#{memberId},
-		#{memberPassword},
-		#{memberName},
-		#{memberBirthDate},
-		#{memberPhone},
-		#{memberNickname})
+		insert into mymember
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memId!=null and memId != '' ">MEM_ID,</if>
+			<if test="memPass!=null and memPass != '' ">MEM_PASS,</if>
+			<if test="memName!=null and memName != '' ">MEM_NAME,</if>
+			<if test="memTel!=null and memTel != '' ">MEM_TEL,</if>
+			<if test="memAddr!=null and memAddr != '' ">MEM_ADDR,</if>
+			<if test="memPhoto!=null and memPhoto != '' ">MEM_PHOTO,</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memId!=null and memId != '' ">#{memId},  </if>
+			<if test="memPass!=null and memPass != '' ">#{memPass},</if>
+			<if test="memName!=null and memName != '' ">#{memName},</if>
+			<if test="memTel!=null and memTel != '' ">#{memTel}, </if>
+			<if test="memAddr!=null and memAddr != '' ">#{memAddr},</if>
+			<if test="memPhoto!=null and memPhoto != '' ">#{memPhoto},</if>
+		</trim>
 	</insert>
 
 

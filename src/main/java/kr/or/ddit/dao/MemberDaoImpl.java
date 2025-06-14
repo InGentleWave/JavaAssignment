@@ -36,14 +36,32 @@ public class MemberDaoImpl implements IMemberDao {
 
 	@Override
 	public int insertMember(MemberVO mv) {
-		// TODO Auto-generated method stub
-		return 0;
+		SqlSession session = null;
+		int cnt = 0;
+		try {
+			session = MyBatisUtil.getSqlSession();
+			cnt = session.insert("member.insertMember", mv);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return cnt;
 	}
 
 	@Override
 	public MemberVO getMemberDetail(String memId) {
-		// TODO Auto-generated method stub
-		return null;
+		SqlSession session = null;
+		MemberVO mv = new MemberVO();
+		try {
+			session = MyBatisUtil.getSqlSession();
+			mv = session.selectOne("member.getMemberDetail", memId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return mv;
 	}
 
 	@Override

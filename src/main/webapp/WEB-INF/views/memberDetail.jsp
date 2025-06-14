@@ -9,45 +9,24 @@
 <style>
 table, th, td{
 	border: 1px solid blue;
+	border-collapse: collapse;
 }
-.text{
-	width:97%;
+.detail{
+
 }
-.btn-right {
-	display: flex;
-  	justify-content: flex-end; /* 오른쪽 정렬 */
-}
-#isIdAvailableBtn{
-	margin-left:10px;
-}
-.btn{
-	margin-right: 10px;
-	cursor: pointer;
-}
-.btn:disabled {
-	cursor: default;
-}
-.tr-hidden {
+.update{
 	display:none;
-}
-.hiddenMsg{
-	color:red;
-	text-align: center;
-	font-size : 10pt;
 }
 </style>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath }/insert.do" method="post">
+	<form action="${pageContext.request.contextPath }/update.do" method="post">
 		<table>
-			<tr>
-				<th>회원ID</th><td><input type="text" id="memId" name="memId" value="<c:out value='${data.memId}'/>" required>
-				<input type="button" value="중복확인" id="isIdAvailableBtn"></td>
+			<tr class="detail">
+				<th>회원ID</th><td><c:out value='${data.memId}'/></td>
 			</tr>
-			<tr id="tr-id-hidden" class="tr-hidden">
-				<td id="idAvailableMsg" class="hiddenMsg" colspan='2'>
-					<!-- 아이디 사용 가능한지 여부를 동적으로 표시할 부분 -->
-				</td>
+			<tr class="update">
+				<th>회원ID</th><td><input type="text" id="memId" name="memId" value="<c:out value='${data.memId}'/>" required>
 			</tr>
 			<tr>
 				<th>비밀번호</th><td><input type="text" id="memPass" name="memPass" class="text" required></td>

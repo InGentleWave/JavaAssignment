@@ -62,7 +62,7 @@ table, th, td{
 					data.forEach(member =>{
 						html +=`
 							<tr>
-								<td>\${member.memId}</td>
+								<td><a href="#" data-id="\${member.memId}">\${member.memId}</a></td>
 								<td>\${member.memPass}</td>
 								<td>\${member.memName}</td>
 								<td>\${member.memTel}</td>
@@ -76,6 +76,17 @@ table, th, td{
 					console.error("에러 발생 =>", error);
 				});
 		}
+		document.querySelector("#memberListTable").addEventListener("click",function(e){
+			if(e.target.tagName === 'A'){
+				e.preventDefault();
+				const memId = e.target.dataset['id'];
+			} else{
+				return;
+			}
+			window.location.href=contextPath+"update.do?memId="+memId;
+			
+		});
+		
 	</script>
 </body>
 </html>

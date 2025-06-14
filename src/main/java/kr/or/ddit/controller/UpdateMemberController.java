@@ -18,35 +18,19 @@ import kr.or.ddit.service.MemberServiceImpl;
 import kr.or.ddit.vo.MemberVO;
 import util.GsonUtil;
 
-@WebServlet("/insert.do")
-public class InsertMemberController extends HttpServlet {
+@WebServlet("/update.do")
+public class UpdateMemberController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IMemberService service = null;
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		resp.setCharacterEncoding("utf-8");
-		boolean isAjax = "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
-		service = MemberServiceImpl.getInstance();
-		if (isAjax) {
-			System.out.println("InsertMemberController 비동기방식 doGet() 호출됨");
-			String memId = req.getParameter("memId");
-			boolean isIdAvailable = service.isIdAvailable(memId) == 0 ? true : false;
-			Map<String,Boolean> paramMap = new HashMap<String, Boolean>();
-			paramMap.put("isIdAvailable", isIdAvailable);
-			
-			resp.setContentType("application/json; charset=UTF-8");
-			
-			Gson gson = GsonUtil.getInstance();
-			String jsonData = gson.toJson(paramMap);
-			System.out.println(jsonData);
-			PrintWriter out = resp.getWriter();
-			out.write(jsonData);
-			out.flush();
-		} else {
-			resp.setContentType("text/html; charset=UTF-8");
-			System.out.println("InsertMemberController 동기방식 doGet() 호출됨");
-			req.getRequestDispatcher("/WEB-INF/views/memberInsert.jsp").forward(req, resp);
-		}
+		
+		String memId = req.getParameter("memId");
+		MemberVO mv = service.getMemberDetail(memId);
+		req.setAttribute("data", mv);
+		
+		req.getRequestDispatcher("/WEB-INF/views/memberDetail.jsp").forward(req, resp);
 	}
 
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
