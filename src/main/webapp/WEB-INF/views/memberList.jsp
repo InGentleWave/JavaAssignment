@@ -45,6 +45,10 @@ table, th, td{
 	<script>
 		$(function(){
 			renderMemberList();
+			document.querySelector("#addMemberBtn").addEventListener("click", function(){
+				location.href=contextPath + "/insert.do";
+			});
+			
 		})
 		function renderMemberList(){
 			let html = "";

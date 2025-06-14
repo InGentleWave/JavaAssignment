@@ -10,4 +10,5 @@ public interface IMemberService {
 	public MemberVO getMemberDetail(String memId);
 	public int updateMember(MemberVO mv);
 	public int deleteMember(String memId);
+	public int isIdAvailable(String memId);
 }

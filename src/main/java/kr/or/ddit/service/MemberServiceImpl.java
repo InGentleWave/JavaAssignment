@@ -44,5 +44,9 @@ public class MemberServiceImpl implements IMemberService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public int isIdAvailable(String memId) {
+		return dao.isIdAvailable(memId);
+	}
 
 }

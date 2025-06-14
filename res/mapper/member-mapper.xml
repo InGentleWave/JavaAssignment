@@ -17,6 +17,9 @@
 	<select id="getListAll" resultMap="memberMap">
 		select * from mymember
 	</select>
+	<select id="isIdAvailable" parameterType="String" resultType="int">
+		select count(*) from mymember where mem_id = #{memId}
+	</select>
 
 	<!-- 회원정보 저장 하기 -->
 	<insert id="insertMember" parameterType="memberVo">

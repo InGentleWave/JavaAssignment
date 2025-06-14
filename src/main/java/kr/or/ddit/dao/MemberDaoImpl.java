@@ -9,15 +9,20 @@ import util.MyBatisUtil;
 
 public class MemberDaoImpl implements IMemberDao {
 	private static IMemberDao dao;
-	private MemberDaoImpl() {}
+
+	private MemberDaoImpl() {
+	}
+
 	public static IMemberDao getInstance() {
-		if(dao==null) dao = new MemberDaoImpl();
+		if (dao == null)
+			dao = new MemberDaoImpl();
 		return dao;
 	}
+
 	@Override
 	public List<MemberVO> getListAll() {
 		SqlSession session = null;
-		List<MemberVO> list =null;
+		List<MemberVO> list = null;
 		try {
 			session = MyBatisUtil.getSqlSession();
 			list = session.selectList("member.getListAll");
@@ -51,6 +56,21 @@ public class MemberDaoImpl implements IMemberDao {
 	public int deleteMember(String memId) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int isIdAvailable(String memId) {
+		SqlSession session = null;
+		int cnt = 0;
+		try {
+			session = MyBatisUtil.getSqlSession();
+			cnt = session.selectOne("member.isIdAvailable", memId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return cnt;
 	}
 
 }

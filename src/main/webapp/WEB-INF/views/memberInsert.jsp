@@ -17,7 +17,7 @@ table, th, td{
 </head>
 <body>
 	<form>
-	<table>
+		<table>
 			<tr>
 				<td colspan="5" >
 					<div class="btn-right">
@@ -26,7 +26,7 @@ table, th, td{
 				</td>
 			</tr>
 			<tr>
-				<th>회원ID</th><td><input type="text" id="memId" name="memId"><input type="button" value="중복확인"></td>
+				<th>회원ID</th><td><input type="text" id="memId" name="memId"><input type="button" value="중복확인" id="isIdAvailableBtn"></td>
 			</tr>
 			<tr>
 				<th>비밀번호</th><td><input type="text" id="password" name="memPass"></td>
@@ -48,7 +48,9 @@ table, th, td{
 			</tr>
 			<tr>
 				<div>
-					<button></button>
+					<button type="submit">저장</button>
+					<button type="reset">취소</button>
+					<button type="button" id="memberListBtn">회원목록</button>
 				</div>
 			</tr>
 	</table>
@@ -59,34 +61,17 @@ table, th, td{
 	<script src="${pageContext.request.contextPath}/js/jquery-3.7.1.js"></script>
 	<script>
 		$(function(){
-			renderMemberList();
-		})
-		function renderMemberList(){
-			let html = "";
-			fetch(contextPath+"/list.do",{
-				headers: {
-				    "X-Requested-With": "XMLHttpRequest" // 핵심 헤더 추가
-				}
-			})
-				.then(res => res.json())
-				.then(data => {
-					data.forEach(member =>{
-						html +=`
-							<tr>
-								<td>\${member.memId}</td>
-								<td>\${member.memPass}</td>
-								<td>\${member.memName}</td>
-								<td>\${member.memTel}</td>
-								<td>\${member.memAddr}</td>
-							</tr>
-							`;
-					})
-					document.querySelector("#memberListTable").innerHTML=html;
+			$(document).off("click","#isIdAvailableBtn").on("click","#isIdAvailableBtn",function(){
+				const memId = document.querySelector("#memId").value;
+				fetch(contextPath + "/insert.do",{
+					headers :{
+						'Content-Type':'application/json',
+						'X-Requested-With' : 'XMLHttpRequest'
+					},
+					body : JSON.stringify({key:memId})
 				})
-				.catch(error =>{
-					console.error("에러 발생 =>", error);
-				});
-		}
+			});
+		})
 	</script>
 </body>
 </html>
