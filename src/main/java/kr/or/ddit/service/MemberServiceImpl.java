@@ -38,8 +38,7 @@ public class MemberServiceImpl implements IMemberService {
 
 	@Override
 	public int deleteMember(String memId) {
-		// TODO Auto-generated method stub
-		return 0;
+		return dao.deleteMember(memId);
 	}
 	@Override
 	public int isIdAvailable(String memId) {

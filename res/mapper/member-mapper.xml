@@ -50,7 +50,7 @@
 
 	<!-- 회원 정보 수정 -->
 	<update id="updateMember" parameterType="memberVo">
-		UPDATE members
+		UPDATE mymember
 		<set>
 			<if test="memPass!=null and memPass != '' ">MEM_PASS  = #{memPass},</if>
 			<if test="memName!=null and memName != '' ">MEM_NAME  = #{memName},</if>
@@ -60,8 +60,9 @@
 		</set>
 		WHERE MEM_ID = #{memId}
 	</update>
-
-	<!-- 관리자 페이지 리스트 조회 -->
+	<delete id="deleteMember" parameterType="String">
+		delete from mymember where mem_id = #{memId}
+	</delete>
 
 
 

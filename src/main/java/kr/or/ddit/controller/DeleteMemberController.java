@@ -30,11 +30,17 @@ public class DeleteMemberController extends HttpServlet {
 		resp.setCharacterEncoding("utf-8");
 		service = MemberServiceImpl.getInstance();
 		String memId=req.getParameter("memId");
+		System.out.println(memId);
 		int cnt = service.deleteMember(memId);
 		if(cnt>0) {
-			String msg = URLEncoder.encode("삭제 성공했습니다.","UTF-8");
+			String msg = "삭제 성공했습니다.";
 			req.getSession().setAttribute("msg", msg);
 			resp.sendRedirect(req.getContextPath()+"/list.do");
+		} else {
+			String msg = "삭제 실패했습니다.";
+			req.getSession().setAttribute("msg", msg);
+			resp.sendRedirect(req.getContextPath()+"/list.do");
+			
 		}
 	}
 

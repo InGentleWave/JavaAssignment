@@ -55,7 +55,10 @@ table, th, td{
 			<td colspan='2'>
 				<div style="display:flex; justify-content:center;">
 					<button type="button" class="btn" id="updateBtn">수정</button>
-					<button type="button" class="btn" id="deleteBtn">삭제</button>
+					<form action="${pageContext.request.contextPath}/delete.do" method="post">
+						<input type="hidden" name="memId" value="<c:out value='${data.memId}'/>"/>
+						<button type="submit" class="btn" id="deleteBtn">삭제</button>
+					</form>
 					<button type="button" class="btn memberListBtn">회원목록</button>
 				</div>
 			</td>
@@ -137,10 +140,10 @@ table, th, td{
 					e.preventDefault();
 					document.querySelector("#table-detail").style.display="none";
 					document.querySelector("#form-update").style.display="block";
-					
 				} else if(e.target.id ==="deleteBtn"){
+					e.preventDefault();
 					if(confirm("회원 정보를 삭제할까요?")){
-						window.location.href=contextPath+"/delete.do?memId="+memId;
+						e.target.closest("form").submit();
 					} 
 				} else if(e.target.classList.contains("memberListBtn")){
 					e.preventDefault();
@@ -163,22 +166,18 @@ table, th, td{
 			// 유효성 검사 체크용 변수
 			let isPwCheckOk = false;
 			const submitBtn = document.querySelector("#submitBtn");
-			// 유효성 검사 전 제출 버튼 비활성화
-			submitBtn.disabled = false;
 			// 유효성 검사 후 제출 버튼 활성화 함수
 			function isInputOk(){
+				if(document.querySelector("#memPass").value===""){
+					submitBtn.disabled = false;
+					return;
+				}
 				if( isPwCheckOk ){
 					submitBtn.disabled = false;
 				} else {
 					submitBtn.disabled = true;
 				}
 			}
-// 			// 취소(리셋) 버튼 클릭 시 tr-hidden 숨기기, 저장 버튼 비활성화
-// 			document.querySelector("button[type='reset']").addEventListener("click",function(){
-// 				document.querySelector("#tr-pw-hidden").style.display="none";
-// 				document.querySelector("#tr-file-hidden").style.display="none";
-// 				submitBtn.disabled = true;
-// 			});
 			// 비밀번호 확인 여부 출력용 함수
 			function pwCheckMsg(){
 				const pwCheckMsg = document.querySelector("#pwCheckMsg");
